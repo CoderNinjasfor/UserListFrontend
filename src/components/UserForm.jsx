@@ -2,6 +2,9 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { TextField, Button, Modal, Box } from "@mui/material";
 
+// Use your backend API URL from the environment
+const API_URL = import.meta.env.VITE_API_URL;
+
 function UserForm({ open, handleClose, onUserAdded, fetchUsers, selectedUser, clearSelectedUser }) {
   const [user, setUser] = useState({ name: "", email: "", age: "" });
 
@@ -18,25 +21,51 @@ function UserForm({ open, handleClose, onUserAdded, fetchUsers, selectedUser, cl
     setUser({ ...user, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e) => {
+  //const handleSubmit = async (e) => {
+  //  e.preventDefault();
+
+  //   if (selectedUser) {
+  //     // Edit mode
+  //     await axios.put(`http://localhost:5000/api/users/${selectedUser._id}`, user);
+  //     console.log("User updated successfully!");
+  //     fetchUsers();
+  //   } else {
+  //     // Add mode
+  //     await axios.post("http://localhost:5000/api/users", user);
+  //     console.log("User added successfully!");
+  //     if (onUserAdded) onUserAdded();
+  //   }
+
+  //   setUser({ name: "", email: "", age: "" });
+  //   handleClose();
+  //   if (clearSelectedUser) clearSelectedUser();
+  // };
+
+const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (selectedUser) {
-      // Edit mode
-      await axios.put(`http://localhost:5000/api/users/${selectedUser._id}`, user);
-      console.log("User updated successfully!");
-      fetchUsers();
-    } else {
-      // Add mode
-      await axios.post("http://localhost:5000/api/users", user);
-      console.log("User added successfully!");
-      if (onUserAdded) onUserAdded();
-    }
+    try {
+      if (selectedUser) {
+        // Edit mode
+        await axios.put(`${API_URL}/api/users/${selectedUser._id}`, user);
+        console.log("User updated successfully!");
+        fetchUsers();
+      } else {
+        // Add mode
+        await axios.post(`${API_URL}/api/users`, user);
+        console.log("User added successfully!");
+        if (onUserAdded) onUserAdded();
+      }
 
-    setUser({ name: "", email: "", age: "" });
-    handleClose();
-    if (clearSelectedUser) clearSelectedUser();
+      setUser({ name: "", email: "", age: "" });
+      handleClose();
+      if (clearSelectedUser) clearSelectedUser();
+    } catch (error) {
+      console.error("Error saving user:", error);
+    }
   };
+
+
 
   return (
     <Modal open={open} onClose={handleClose}>

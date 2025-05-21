@@ -4,10 +4,23 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import axios from "axios";
 
+// Get your backend URL from .env
+const API_URL = import.meta.env.VITE_API_URL;
+
 function UserList({ users, fetchUsers, openForm, setSelectedUser }) {
-  const handleDelete = async (id) => {
-    await axios.delete(`http://localhost:5000/api/users/${id}`);
-    fetchUsers();
+  // const handleDelete = async (id) => {
+  //   await axios.delete(`http://localhost:5000/api/users/${id}`);
+  //   fetchUsers();
+  // };
+
+
+ const handleDelete = async (id) => {
+    try {
+      await axios.delete(`${API_URL}/api/users/${id}`);
+      fetchUsers();
+    } catch (err) {
+      console.error("Delete failed:", err);
+    }
   };
 
   const handleEdit = (user) => {
