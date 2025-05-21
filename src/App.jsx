@@ -3,14 +3,27 @@ import axios from "axios";
 import UserForm from "./components/UserForm";
 import UserList from "./components/UserList";
 
+// use env variable
+const API_URL = import.meta.env.VITE_API_URL;
+
 function App() {
   const [users, setUsers] = useState([]);
   const [formOpen, setFormOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
 
+  // const fetchUsers = async () => {
+  //   const res = await axios.get("http://localhost:5000/api/users");
+  //   setUsers(res.data);
+  // };
+
+  
   const fetchUsers = async () => {
-    const res = await axios.get("http://localhost:5000/api/users");
-    setUsers(res.data);
+    try {
+      const res = await axios.get(`${API_URL}/api/users`);
+      setUsers(res.data);
+    } catch (error) {
+      console.error("Error fetching users:", error);
+    }
   };
 
   useEffect(() => {
